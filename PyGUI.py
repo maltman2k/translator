@@ -13,7 +13,7 @@ MouseState="none"
 translator = Translator()
 print ("Translator started.....")
 
-
+# this is the layout structure
 
 layout = [
           [sg.Checkbox("Enable Translation",default=True, key='-S1-',pad=(5, (5, 10))),sg.Checkbox("Enable Voice", key='-S2-',pad=(5, (5, 10)))],
