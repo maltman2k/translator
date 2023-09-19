@@ -10,7 +10,17 @@ import os
 import pygame
 import time
 
+StatusBarInitialStr='JCI'
+
+
+def StatusBar (msg):
+        window['-STAT-'].update(msg)
+        window.refresh()  
+
+
+
 def PlaySound (sound):
+        StatusBar("Playing Voice")
         try:
             pygame.init()
             pygame.mixer.music.load(sound)
@@ -32,6 +42,20 @@ def PlaySound (sound):
             pygame.mixer.quit()
 
         except Exception as e: print(e)
+        StatusBar(StatusBarInitialStr)
+
+
+def ConvertTextToSpeech(TextToSpeech):
+     StatusBar("Converting Text to Speech")
+     audio = gTTS(text=TextToSpeech, lang="it", slow=False)       
+     audio.save("example.mp3")
+     StatusBar(StatusBarInitialStr)
+     return("example.mp3")
+
+
+
+
+
 
 oldtext=''
 MouseState="none"
@@ -46,8 +70,9 @@ layout = [
           [sg.Checkbox("Enable Translation",default=True, key='-S1-',pad=(5, (5, 10))),sg.Checkbox("Enable Voice", key='-S2-',pad=(5, (5, 10)))],
           #[sg.Button('Play Voice'),sg.Button('Pause Voice'), sg.Button('Stop Voice')],
           [sg.Button('Stop Voice'),sg.Button('Repeat')],
-          [sg.Multiline('Multiline\n', disabled=True,size=(95,25), key='-OUT-')],
-          [sg.Button('OK'), sg.Button('Exit')]]
+          [sg.Multiline('Multiline\n', disabled=True,size=(95,22), key='-OUT-')],
+          [sg.Button('OK'), sg.Button('Exit')],
+          [sg.StatusBar("JCI",size=(100,1),justification='center' ,key="-STAT-")]]
 
 #sg.theme('DarkBlue1')
 window = sg.Window('Translator', layout,keep_on_top=True,size=(700, 500))
@@ -77,10 +102,9 @@ while True:
         print ('Repeat')
         if values["-S2-"] == True:
             textToRepeat=values['-OUT-']
-            print (textToRepeat)
-            audio = gTTS(text=textToRepeat, lang="it", slow=False)
-            audio.save("example.mp3")
-            PlaySound("example.mp3")
+            StrAudioFileName=ConvertTextToSpeech(textToRepeat)
+            PlaySound(StrAudioFileName)
+       
             
 
   
@@ -117,9 +141,8 @@ while True:
                             if values["-S2-"] == True:
                                 
                                 if len(translation.text) > 0:
-                                    audio = gTTS(text=translation.text, lang="it", slow=False)
-                                    audio.save("example.mp3")
-                                    PlaySound ("example.mp3")
+                                    StrAudioFileName=ConvertTextToSpeech(translation.text)
+                                    PlaySound(StrAudioFileName)
                                     
 
 
